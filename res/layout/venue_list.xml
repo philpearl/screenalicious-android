@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:paddingTop="72dp"
+        android:paddingBottom="72dp"
+        android:paddingLeft="20dp"
+        android:paddingRight="20dp"
+        >
+	<TextView
+	          android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:text="Where Are You?"
+              android:background="@drawable/dialog_header"
+              android:textAppearance="@style/dialogTitleTextAppearance"
+              android:padding="20dp"
+	     
+	    />
+    <ListView android:id="@id/android:list"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:background="@drawable/dialog_body"
+              android:layout_weight="1"
+              android:drawSelectorOnTop="false"
+              android:divider="@color/primary"
+              android:dividerHeight="2dp"
+              android:scrollbars="none"
+              android:padding="30dp">
+        <!-- Preview: listitem=@layout/venue_list_item -->
+    </ListView>
+
+    <TextView android:id="@id/android:empty"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:textAppearance="@style/dialogTextAppearance"
+              android:background="@drawable/dialog_body"
+              android:text="No data"/>
+</LinearLayout>

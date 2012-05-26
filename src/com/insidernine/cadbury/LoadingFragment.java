@@ -2,6 +2,7 @@ package com.insidernine.cadbury;
 
 import java.io.IOException;
 
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
@@ -110,9 +111,8 @@ public class LoadingFragment extends Fragment
   {
     if ((mApplication.getSports() != null) && (mTimeUp))
     {
-      getFragmentManager().beginTransaction()
-      .replace(android.R.id.content, new CheckinFragment())
-      .commit();          
+      startActivity(new Intent(getActivity(), CheckInActivity.class));
+      getActivity().finish();
     }
   }
 }

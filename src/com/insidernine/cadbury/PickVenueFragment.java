@@ -1,6 +1,7 @@
 package com.insidernine.cadbury;
 
 import android.content.Context;
+import android.content.Intent;
 import android.location.Location;
 import android.location.LocationManager;
 import android.os.Bundle;
@@ -9,7 +10,9 @@ import android.support.v4.app.ListFragment;
 import android.support.v4.app.LoaderManager.LoaderCallbacks;
 import android.support.v4.content.Loader;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -29,7 +32,7 @@ public class PickVenueFragment extends ListFragment implements LoaderCallbacks<R
     
     mLocationManager = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
     mAdapter = new VenueAdapter(getActivity());
-    mHandler = new Handler();
+    mHandler = new Handler();    
   }
   
   private final Runnable mQuitRunnable = new Runnable()
@@ -40,6 +43,11 @@ public class PickVenueFragment extends ListFragment implements LoaderCallbacks<R
     }
   };
   
+  public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) 
+  {
+    return inflater.inflate(R.layout.venue_list, container, false);
+  }
+    
   @Override
   public void onActivityCreated(Bundle savedInstanceState)
   {
@@ -47,8 +55,6 @@ public class PickVenueFragment extends ListFragment implements LoaderCallbacks<R
     // Get current location and then query the  venue list
     // TODO: Keep looking for better location in background and 
     // offer a refresh
-    setListShownNoAnimation(false);
-    
     setListAdapter(mAdapter);
     
     mLocation = LocationUtils.getBestLastKnownLocation(mLocationManager);
@@ -69,9 +75,9 @@ public class PickVenueFragment extends ListFragment implements LoaderCallbacks<R
   {
     Venue venue = mAdapter.getItem(position);
     Log.d(TAG, "Picked venue " + venue);
-    ((VenueCallback)getTargetFragment()).onVenuePicked(venue);
-    
-    getFragmentManager().popBackStack();
+    //((VenueCallback)getTargetFragment()).onVenuePicked(venue);
+    getActivity().setResult(getTargetRequestCode(), new Intent().putExtra(PickVenueActivity.EXTRA_VENUE, venue));
+    getActivity().finish();
   }
 
   @Override
@@ -97,14 +103,6 @@ public class PickVenueFragment extends ListFragment implements LoaderCallbacks<R
     mAdapter.clear();
     mAdapter.addAll(result.getData());
     mAdapter.notifyDataSetChanged();
-    if (isResumed())
-    {
-      setListShown(true);
-    }
-    else
-    {
-      setListShownNoAnimation(true);
-    }    
   }
 
   @Override

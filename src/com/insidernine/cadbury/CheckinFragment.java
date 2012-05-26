@@ -4,6 +4,7 @@ import java.io.IOException;
 
 import com.insidernine.cadbury.PickVenueFragment.VenueCallback;
 
+import android.content.Intent;
 import android.location.Location;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -20,6 +21,7 @@ import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 public class CheckinFragment extends Fragment implements VenueCallback
@@ -35,6 +37,7 @@ public class CheckinFragment extends Fragment implements VenueCallback
   private Sport mSport;
   private Venue mVenue;
   private CheckInAsyncTask mCheckInAsyncTask;
+  private TextView mCheckInTitle;
   
   public static CheckinFragment newInstance(Location location, Venue venue)
   {
@@ -77,18 +80,22 @@ public class CheckinFragment extends Fragment implements VenueCallback
         
       }
     });
+    mCheckInTitle = (TextView) view.findViewById(R.id.check_in_title);
     mVenueButton = (Button) view.findViewById(R.id.venue_button);
     mVenueButton.setOnClickListener(new OnClickListener()
     {      
       @Override
       public void onClick(View v)
       {
+        startActivityForResult(new Intent(getActivity(), PickVenueActivity.class), 1);
+        /*
         PickVenueFragment frag = new PickVenueFragment();
         frag.setTargetFragment(CheckinFragment.this, 0);
         getFragmentManager().beginTransaction()
         .addToBackStack(null)
         .replace(android.R.id.content, frag)
         .commit();
+        */
       }
     });
     if (mVenue != null)
@@ -196,6 +203,19 @@ public class CheckinFragment extends Fragment implements VenueCallback
       }
       
       // TODO: go somewhere, update to say checked in 
+    }
+  }
+  
+  @Override
+  public void onActivityResult(int requestCode, int resultCode, Intent data)
+  {
+    Log.d(TAG, "onActivityResult " + data);
+    if (data != null)
+    {
+      mVenue = data.getParcelableExtra(PickVenueActivity.EXTRA_VENUE);
+      mVenueButton.setText(mVenue.getName());
+      mCheckInTitle.setText(mVenue.getName());
+      checkEnableCheckin();
     }
   }
 }

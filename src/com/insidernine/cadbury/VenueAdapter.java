@@ -7,7 +7,7 @@ public class VenueAdapter extends ArrayAdapter<Venue>
 {
   public VenueAdapter(Context context)
   {
-    super(context, android.R.layout.simple_list_item_1);
+    super(context, R.layout.venue_list_item, android.R.id.text1);
   }
 
   public void addAll(Venue[] data)

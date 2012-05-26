@@ -1,12 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     android:orientation="vertical" >
 
-    <TextView
-        android:layout_width="fill_parent"
+        <TextView
+            android:id="@+id/customTitle"
+        android:drawableLeft="@drawable/cadbury_logo"
+        android:text="@string/app_name"
         android:layout_height="wrap_content"
-        android:text="@string/hello" />
-
-</LinearLayout>
+        android:layout_width="match_parent"
+        android:gravity="center"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:textAppearance="@style/dialogTitleTextAppearance"
+        android:background="@color/primary" 
+        />
+    
+    
+	<FrameLayout 
+	    android:id="@+id/fragmentContainer"
+	    android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+	    
+	    >
+	    	    
+	</FrameLayout>
+	
+</RelativeLayout>

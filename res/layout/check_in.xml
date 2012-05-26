@@ -1,47 +1,69 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent" >
-    
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:paddingTop="72dp"
+        android:paddingBottom="72dp"
+        android:paddingLeft="20dp"
+        android:paddingRight="20dp"
+        >
 	<TextView
-	    android:layout_width="wrap_content"
-	    android:layout_height="wrap_content"
-	    android:id="@+id/im_at_text"
-	    android:text="I'm at"
-	    android:layout_margin="@dimen/standard_spacing"
+	    android:id="@+id/check_in_title"
+	          android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:text="Where Are You?"
+              android:background="@drawable/dialog_header"
+              android:textAppearance="@style/dialogTitleTextAppearance"
+              android:padding="20dp"
+	     
 	    />
-	<Button 
-	    android:id="@+id/venue_button"
-	    android:layout_width="wrap_content"
-	    android:layout_height="wrap_content"
-	    android:layout_toRightOf="@id/im_at_text"
-	    android:layout_alignBaseline="@id/im_at_text"
-	    android:text="pick venue"
-	    />
-	<Spinner
-	    android:id="@+id/sport_spinner"
-	    android:layout_width="wrap_content"
-	    android:layout_height="wrap_content"
-	    android:layout_toRightOf="@+id/watching_text"
-	    android:layout_below="@id/venue_button"
-	    />
+	<RelativeLayout
+	    android:layout_width="match_parent"
+	    android:layout_height="match_parent" 
+	    android:background="@drawable/dialog_body">
+	    
+		<TextView
+		    android:layout_width="wrap_content"
+		    android:layout_height="wrap_content"
+		    android:id="@+id/im_at_text"
+		    android:text="I'm at"
+		    android:layout_margin="@dimen/standard_spacing"
+		    />
+		<Button 
+		    android:id="@+id/venue_button"
+		    android:layout_width="wrap_content"
+		    android:layout_height="wrap_content"
+		    android:layout_toRightOf="@id/im_at_text"
+		    android:layout_alignBaseline="@id/im_at_text"
+		    android:text="pick venue"
+		    />
+		<Spinner
+		    android:id="@+id/sport_spinner"
+		    android:layout_width="wrap_content"
+		    android:layout_height="wrap_content"
+		    android:layout_toRightOf="@+id/watching_text"
+		    android:layout_below="@id/venue_button"
+		    />
+		
+		<TextView
+		    android:layout_width="wrap_content"
+		    android:layout_height="wrap_content"
+		    android:id="@+id/watching_text"
+		    android:layout_alignBaseline="@id/sport_spinner"	    
+		    android:layout_alignLeft="@id/im_at_text"
+		    android:text="watching"
+		    android:layout_margin="@dimen/standard_spacing"
+		    />
 	
-	<TextView
-	    android:layout_width="wrap_content"
-	    android:layout_height="wrap_content"
-	    android:id="@+id/watching_text"
-	    android:layout_alignBaseline="@id/sport_spinner"	    
-	    android:layout_alignLeft="@id/im_at_text"
-	    android:text="watching"
-	    android:layout_margin="@dimen/standard_spacing"
-	    />
-
-	<Button
-	    android:id="@+id/check_in_button"
-	    android:layout_width="wrap_content"
-	    android:layout_height="wrap_content"
-	    android:layout_alignRight="@+id/sport_spinner"
-	    android:layout_below="@+id/sport_spinner"
-	    android:text="Check Me In!" />
-	
-</RelativeLayout>
+		<Button
+		    android:id="@+id/check_in_button"
+		    android:layout_width="wrap_content"
+		    android:layout_height="wrap_content"
+		    android:layout_centerHorizontal="true"
+		    android:layout_alignParentBottom="true"
+		    android:background="@drawable/check_in_button"
+		    />
+		
+	</RelativeLayout>
+</LinearLayout>

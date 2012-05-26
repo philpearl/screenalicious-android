@@ -45,8 +45,8 @@ public class CheckinFragment extends Fragment implements VenueCallback
   @Override
   public void onCreate(Bundle savedInstanceState)
   {
-    // TODO Auto-generated method stub
     super.onCreate(savedInstanceState);
+    setRetainInstance(true);
   }
   
   @Override
@@ -59,6 +59,7 @@ public class CheckinFragment extends Fragment implements VenueCallback
   @Override
   public void onViewCreated(View view, Bundle savedInstanceState)
   {
+    Log.d(TAG, "onViewCreated");
     super.onViewCreated(view, savedInstanceState);
     mCheckInButton = (Button) view.findViewById(R.id.check_in_button);
     mCheckInButton.setOnClickListener(new OnClickListener()
@@ -84,6 +85,10 @@ public class CheckinFragment extends Fragment implements VenueCallback
         .commit();
       }
     });
+    if (mVenue != null)
+    {
+      mVenueButton.setText(mVenue.getName());
+    }
     mSportSpinner = (Spinner) view.findViewById(R.id.sport_spinner);
     mSportSpinner.setAdapter(new ArrayAdapter<Sport>(getActivity(), 
         android.R.layout.simple_spinner_item, 
@@ -121,11 +126,8 @@ public class CheckinFragment extends Fragment implements VenueCallback
 
   @Override
   public void onVenuePicked(Venue venue)
-  {
-    Log.d(TAG, "onVenuePicked " + venue);
+  {    
     mVenue = venue;
-    mVenueButton.setText(mVenue.getName());
-    mVenueButton.setEnabled(false);
-    checkEnableCheckin();
+    Log.d(TAG, "onVenuePicked " + mVenue);
   }
 }

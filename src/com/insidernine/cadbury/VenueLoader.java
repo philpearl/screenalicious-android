@@ -11,28 +11,31 @@ import android.widget.Toast;
 public class VenueLoader extends AsyncTaskLoader<Result<Venue[]>>
 {
   private static final String TAG = "VenueLoader";
-  private final HttpLayer mHttpLayer;
   private final Location mLocation;
   
   public VenueLoader(Context context, Location location)
   {
     super(context);
-    mHttpLayer = new HttpLayer(context);
     mLocation = location;
   }
 
   @Override
   public Result<Venue[]> loadInBackground()
   {    
+    HttpLayer httpLayer = new HttpLayer(getContext());
     try
     {
       Log.d(TAG, "loadInBackground" + mLocation);
-      return new Result<Venue[]>(mHttpLayer.getVenueList(mLocation));
+      return new Result<Venue[]>(httpLayer.getVenueList(mLocation));
     }
     catch (IOException e)
     {
       Log.e(TAG, "Failed to get location list", e);
       return new Result<Venue[]>(e);      
+    }
+    finally
+    {
+      httpLayer.onDestroy();
     }
   }
   

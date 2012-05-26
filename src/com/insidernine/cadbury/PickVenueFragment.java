@@ -4,6 +4,7 @@ import android.content.Context;
 import android.location.Location;
 import android.location.LocationManager;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.app.ListFragment;
 import android.support.v4.app.LoaderManager.LoaderCallbacks;
 import android.support.v4.content.Loader;
@@ -19,6 +20,7 @@ public class PickVenueFragment extends ListFragment implements LoaderCallbacks<R
   private Location mLocation;
   private LocationManager mLocationManager;
   private VenueAdapter mAdapter;
+  private Handler mHandler;
   
   @Override
   public void onCreate(Bundle savedInstanceState)
@@ -27,7 +29,16 @@ public class PickVenueFragment extends ListFragment implements LoaderCallbacks<R
     
     mLocationManager = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
     mAdapter = new VenueAdapter(getActivity());
+    mHandler = new Handler();
   }
+  
+  private final Runnable mQuitRunnable = new Runnable()
+  {
+    public void run()
+    {
+      getFragmentManager().popBackStack();
+    }
+  };
   
   @Override
   public void onActivityCreated(Bundle savedInstanceState)
@@ -47,14 +58,20 @@ public class PickVenueFragment extends ListFragment implements LoaderCallbacks<R
   }
   
   @Override
+  public void onDestroy()
+  {
+    mHandler.removeCallbacks(mQuitRunnable);
+    super.onDestroy();
+  }
+  
+  @Override
   public void onListItemClick(ListView l, View v, int position, long id)
   {
     Venue venue = mAdapter.getItem(position);
     Log.d(TAG, "Picked venue " + venue);
-    CheckinFragment frag = CheckinFragment.newInstance(mLocation, venue);
-    getFragmentManager().beginTransaction()
-    .replace(getId(), frag)
-    .commit();
+    ((VenueCallback)getTargetFragment()).onVenuePicked(venue);
+    
+    getFragmentManager().popBackStack();
   }
 
   @Override
@@ -72,6 +89,8 @@ public class PickVenueFragment extends ListFragment implements LoaderCallbacks<R
     if (result.isFailure())
     {
       Toast.makeText(getActivity(), "Failed to get venues: " + result.getException(), Toast.LENGTH_LONG).show();
+      // Can't pop frag of stack diretcly in loader callback
+      mHandler.post(mQuitRunnable);
       return;
     }
     
@@ -93,5 +112,10 @@ public class PickVenueFragment extends ListFragment implements LoaderCallbacks<R
   {
     mAdapter.clear();
     mAdapter.notifyDataSetChanged();
+  }
+  
+  public interface VenueCallback
+  {
+    public void onVenuePicked(Venue venue);
   }
 }

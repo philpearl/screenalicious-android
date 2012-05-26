@@ -16,7 +16,7 @@
 	    android:layout_height="wrap_content"
 	    android:layout_toRightOf="@id/im_at_text"
 	    android:layout_alignBaseline="@id/im_at_text"
-	    android:text="_venue_"
+	    android:text="pick venue"
 	    />
 	<Spinner
 	    android:id="@+id/sport_spinner"
@@ -33,6 +33,7 @@
 	    android:layout_alignBaseline="@id/sport_spinner"	    
 	    android:layout_alignLeft="@id/im_at_text"
 	    android:text="watching"
+	    android:layout_margin="@dimen/standard_spacing"
 	    />
 
 	<Button

@@ -20,4 +20,10 @@ public class Sport
   {
     return mId;
   }
+  
+  @Override
+  public String toString()
+  {
+    return mName;
+  }
 }

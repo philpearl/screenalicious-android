@@ -15,7 +15,7 @@ public class CadburyActivity extends FragmentActivity
     if (savedInstanceState == null)
     {
       // Starting from scratch
-      Fragment frag = new PickVenueFragment();
+      Fragment frag = new LoadingFragment();
       getSupportFragmentManager().beginTransaction()
       .add(android.R.id.content, frag)
       .commit();

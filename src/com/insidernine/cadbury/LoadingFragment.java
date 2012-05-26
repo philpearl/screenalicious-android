@@ -111,7 +111,7 @@ public class LoadingFragment extends Fragment
   {
     if ((mApplication.getSports() != null) && (mTimeUp))
     {
-      startActivity(new Intent(getActivity(), CheckInActivity.class));
+      startActivity(new Intent(getActivity(), CadburyMapActivity.class));
       getActivity().finish();
     }
   }

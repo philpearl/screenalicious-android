@@ -26,7 +26,10 @@
               android:divider="@color/primary"
               android:dividerHeight="2dp"
               android:scrollbars="none"
-              android:padding="30dp">
+              android:fadingEdge="none"
+              android:paddingLeft="30dp"
+              android:paddingRight="30dp"
+              >
         <!-- Preview: listitem=@layout/venue_list_item -->
     </ListView>
 

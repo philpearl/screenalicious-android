@@ -54,7 +54,6 @@ public class CheckinFragment extends Fragment implements VenueCallback
   {
     super.onCreate(savedInstanceState);
     setRetainInstance(true);
-    mCheckInAsyncTask = new CheckInAsyncTask();
   }
   
   @Override
@@ -76,6 +75,11 @@ public class CheckinFragment extends Fragment implements VenueCallback
       public void onClick(View v)
       {
         Log.d(TAG, "Check into " + mVenue + " to watch " + mSport);
+        if (mCheckInAsyncTask != null)
+        {
+          mCheckInAsyncTask.cancel(false);          
+        }
+        mCheckInAsyncTask = new CheckInAsyncTask();
         mCheckInAsyncTask.execute();
         
       }
@@ -88,14 +92,6 @@ public class CheckinFragment extends Fragment implements VenueCallback
       public void onClick(View v)
       {
         startActivityForResult(new Intent(getActivity(), PickVenueActivity.class), 1);
-        /*
-        PickVenueFragment frag = new PickVenueFragment();
-        frag.setTargetFragment(CheckinFragment.this, 0);
-        getFragmentManager().beginTransaction()
-        .addToBackStack(null)
-        .replace(android.R.id.content, frag)
-        .commit();
-        */
       }
     });
     if (mVenue != null)
@@ -135,7 +131,11 @@ public class CheckinFragment extends Fragment implements VenueCallback
   @Override
   public void onDestroy()
   {
-    mCheckInAsyncTask.cancel(true);
+    if (mCheckInAsyncTask != null)
+    {
+      mCheckInAsyncTask.cancel(true);
+      mCheckInAsyncTask = null;
+    }
     super.onDestroy();
   }
   

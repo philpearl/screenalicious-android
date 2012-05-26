@@ -7,11 +7,15 @@ public class Venue implements Parcelable
 {
   private final String mName;
   private final String mId;
+  private final Double mLat;
+  private final Double mLon;
   
-  public Venue(final String id, final String name)
+  public Venue(final String id, final String name, Double lat, Double lon)
   {
     mName = name;
     mId = id;
+    mLat = lat;
+    mLon = lon;
   }
   
   public String getName()
@@ -22,6 +26,16 @@ public class Venue implements Parcelable
   public String getId()
   {
     return mId;
+  }
+  
+  public Double getLat()
+  {
+    return mLat;
+  }
+  
+  public Double getLon()
+  {
+    return mLon;
   }
   
   @Override
@@ -41,13 +55,17 @@ public class Venue implements Parcelable
   public void writeToParcel(Parcel dest, int flags)
   {
     dest.writeString(mId);
-    dest.writeString(mName);    
+    dest.writeString(mName);
+    dest.writeDouble(mLat);
+    dest.writeDouble(mLon);
   }
   
   private Venue(Parcel in)
   {
     mId = in.readString();
     mName = in.readString();
+    mLat = in.readDouble();
+    mLon = in.readDouble();
   }
   
   public static final Parcelable.Creator<Venue> CREATOR = new Parcelable.Creator<Venue>() 

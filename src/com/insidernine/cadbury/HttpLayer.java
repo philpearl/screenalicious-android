@@ -4,8 +4,14 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.http.HttpResponse;
+import org.apache.http.StatusLine;
 import org.apache.http.client.ClientProtocolException;
+import org.apache.http.client.HttpResponseException;
+import org.apache.http.client.ResponseHandler;
+import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpGet;
+import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.utils.URLEncodedUtils;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.protocol.BasicHttpContext;
@@ -71,5 +77,39 @@ public class HttpLayer
     HttpGet get = new HttpGet(OUR_SERVER + "/checkin/get_sports");
     
     return mHttpClient.execute(get, mSportsResponseHandler);
+  }
+  
+  public void checkIn(Venue venue, Sport sport, String id) throws IOException
+  {
+    List<BasicNameValuePair> params = new ArrayList<BasicNameValuePair>(5);
+    
+    params.add(new BasicNameValuePair("venue", venue.getId()));
+    params.add(new BasicNameValuePair("venue_name", venue.getName()));
+    params.add(new BasicNameValuePair("lat", String.valueOf(venue.getLat())));
+    params.add(new BasicNameValuePair("lon", String.valueOf(venue.getLon())));
+    params.add(new BasicNameValuePair("person", id));
+    params.add(new BasicNameValuePair("sport", String.valueOf(sport.getId())));
+    
+    String url = OUR_SERVER + "/checkin/checkin?" + URLEncodedUtils.format(params, "UTF-8");
+    Log.d(TAG, "checkIn url: " + url);
+    HttpGet get = new HttpGet(url);
+    
+    ResponseHandler<Void> handler = new ResponseHandler<Void>()
+    {
+      public Void handleResponse(HttpResponse response)
+          throws ClientProtocolException, IOException
+      {
+        StatusLine statusLine = response.getStatusLine();
+        Log.d(TAG, "Have response " + statusLine);
+        if (statusLine.getStatusCode() > 299)
+        {
+          throw new HttpResponseException(statusLine.getStatusCode(), statusLine.getReasonPhrase());
+        }
+
+        return null;
+      }
+    };
+
+    mHttpClient.execute(get, handler);
   }
 }

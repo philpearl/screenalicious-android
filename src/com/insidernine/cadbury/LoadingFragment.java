@@ -4,6 +4,7 @@ import java.io.IOException;
 
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -14,7 +15,18 @@ import android.widget.Toast;
 public class LoadingFragment extends Fragment
 {
   private static final String TAG = "LoadingFragment";
+  private static final long MINIMUM_TIME = 1337;
+  private Handler mHandler;
+  private CadburyApplication mApplication;
+  
   private AsyncTask<Void, Void, Result<Sport[]>> mGetSportsAsyncTask;
+  
+  @Override
+  public void onCreate(Bundle savedInstanceState)
+  {
+    super.onCreate(savedInstanceState);
+    mApplication = (CadburyApplication)getActivity().getApplication();
+  }
   
   @Override
   public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -27,14 +39,28 @@ public class LoadingFragment extends Fragment
   public void onActivityCreated(Bundle savedInstanceState)
   {
     super.onActivityCreated(savedInstanceState);
+    mHandler = new Handler();
     // Load the sport list
-    // TODO: Cache this!
     mGetSportsAsyncTask = new GetSportsAsyncTask().execute();
+    
+    mHandler.postDelayed(mSplash, MINIMUM_TIME);
   }
+  
+  private boolean mTimeUp;
+  private final Runnable mSplash = new Runnable()
+  {    
+    @Override
+    public void run()
+    {
+      mTimeUp = true;
+      moveOn();
+    }
+  };
   
   @Override
   public void onDestroy()
   {
+    mHandler.removeCallbacks(mSplash);
     if (mGetSportsAsyncTask != null)
     {
       mGetSportsAsyncTask.cancel(false);
@@ -75,13 +101,18 @@ public class LoadingFragment extends Fragment
       }
       
       // Cache sports list and continue
-      CadburyApplication app = (CadburyApplication) getActivity().getApplication();
-      app.setSports(result.getData());
-      
+      mApplication.setSports(result.getData());
+      moveOn();
+    }
+  }
+  
+  private void moveOn()
+  {
+    if ((mApplication.getSports() != null) && (mTimeUp))
+    {
       getFragmentManager().beginTransaction()
       .replace(android.R.id.content, new CheckinFragment())
-      .commit();
-
+      .commit();          
     }
   }
 }

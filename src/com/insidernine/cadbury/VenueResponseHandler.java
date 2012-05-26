@@ -29,7 +29,9 @@ public class VenueResponseHandler extends JSONResponseHandler<Venue[]>
     {
       JSONObject jsonVenue = jsonVenues.getJSONObject(i);
       
-      Venue venue = new Venue(jsonVenue.getString("id"), jsonVenue.getString("name"));
+      JSONObject location = jsonVenue.getJSONObject("location");
+      
+      Venue venue = new Venue(jsonVenue.getString("id"), jsonVenue.getString("name"), location.getDouble("lat"), location.getDouble("lng"));
       // TODO: determine category and get an icon url
       venues[i] = venue;
     }

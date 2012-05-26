@@ -1,8 +1,11 @@
 package com.insidernine.cadbury;
 
+import java.io.IOException;
+
 import com.insidernine.cadbury.PickVenueFragment.VenueCallback;
 
 import android.location.Location;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager.LoaderCallbacks;
@@ -31,6 +34,7 @@ public class CheckinFragment extends Fragment implements VenueCallback
   private Button mVenueButton;
   private Sport mSport;
   private Venue mVenue;
+  private CheckInAsyncTask mCheckInAsyncTask;
   
   public static CheckinFragment newInstance(Location location, Venue venue)
   {
@@ -47,6 +51,7 @@ public class CheckinFragment extends Fragment implements VenueCallback
   {
     super.onCreate(savedInstanceState);
     setRetainInstance(true);
+    mCheckInAsyncTask = new CheckInAsyncTask();
   }
   
   @Override
@@ -68,6 +73,7 @@ public class CheckinFragment extends Fragment implements VenueCallback
       public void onClick(View v)
       {
         Log.d(TAG, "Check into " + mVenue + " to watch " + mSport);
+        mCheckInAsyncTask.execute();
         
       }
     });
@@ -119,6 +125,13 @@ public class CheckinFragment extends Fragment implements VenueCallback
     
   }
   
+  @Override
+  public void onDestroy()
+  {
+    mCheckInAsyncTask.cancel(true);
+    super.onDestroy();
+  }
+  
   private void checkEnableCheckin()
   {
     mCheckInButton.setEnabled((mSport != null) && (mVenue != null));
@@ -129,5 +142,60 @@ public class CheckinFragment extends Fragment implements VenueCallback
   {    
     mVenue = venue;
     Log.d(TAG, "onVenuePicked " + mVenue);
+  }
+  
+  class CheckInAsyncTask extends AsyncTask<Void, Void, Exception>
+  {
+    private ProgressDialogFragment mProgressDialogFragment;
+    
+    @Override
+    protected void onPreExecute()
+    {
+      // TODO Show progress dialog
+      mProgressDialogFragment = ProgressDialogFragment.newInstance("Checking in", "One moment please.");
+      mProgressDialogFragment.show(getFragmentManager(), "Progress Dialog");
+    }
+    
+    @Override
+    protected Exception doInBackground(Void... params)
+    {
+      HttpLayer httpLayer = new HttpLayer(getActivity());
+      try
+      {
+        httpLayer.checkIn(mVenue, mSport, Store.getInstance(getActivity()).getUserId());
+      }
+      catch (IOException e)
+      {
+        Log.e(TAG, "Failed to check in", e);
+        return e;
+      }
+      finally
+      {
+        httpLayer.onDestroy();
+      }
+      return null;
+    }
+    
+    @Override
+    protected void onCancelled()
+    {
+      if (mProgressDialogFragment != null)
+      {
+        mProgressDialogFragment.dismiss();
+      }
+    }
+    
+    @Override
+    protected void onPostExecute(Exception result)
+    {
+      mProgressDialogFragment.dismiss();
+      if (result != null)
+      {
+        Toast.makeText(getActivity(), "Failed to check in: " + result, Toast.LENGTH_LONG).show();
+        return;
+      }
+      
+      // TODO: go somewhere, update to say checked in 
+    }
   }
 }

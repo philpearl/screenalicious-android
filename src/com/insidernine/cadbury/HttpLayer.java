@@ -23,7 +23,7 @@ public class HttpLayer
   // TODO: Really, really should obscurize this!
   private static final String FOURSQUARE_CLIENT_SECRET = "HGEGKAUGKXV45WQN4YXMIDCGZBKWM5PKQMLLJ2PSQA0EQT2C";
   
-  private static final String OUR_SERVER = "http://server";
+  private static final String OUR_SERVER = "http://vm15223.vps.tagadab.com";
   
   private final Context mContext;
   private final AndroidHttpClient mHttpClient;
@@ -68,7 +68,7 @@ public class HttpLayer
   
   public Sport[] getSportsList() throws IOException
   {
-    HttpGet get = new HttpGet(OUR_SERVER + "/checkin/sports");
+    HttpGet get = new HttpGet(OUR_SERVER + "/checkin/get_sports");
     
     return mHttpClient.execute(get, mSportsResponseHandler);
   }

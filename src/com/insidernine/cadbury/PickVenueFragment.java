@@ -51,6 +51,10 @@ public class PickVenueFragment extends ListFragment implements LoaderCallbacks<R
   {
     Venue venue = mAdapter.getItem(position);
     Log.d(TAG, "Picked venue " + venue);
+    CheckinFragment frag = CheckinFragment.newInstance(mLocation, venue);
+    getFragmentManager().beginTransaction()
+    .replace(getId(), frag)
+    .commit();
   }
 
   @Override

@@ -6,17 +6,38 @@
 	<TextView
 	    android:layout_width="wrap_content"
 	    android:layout_height="wrap_content"
-	    android:layout_centerInParent="true"
 	    android:id="@+id/im_at_text"
-	    android:text="I'm at _venue_ watching _sport_"
+	    android:text="I'm at"
 	    android:layout_margin="@dimen/standard_spacing"
+	    />
+	<Button 
+	    android:layout_width="wrap_content"
+	    android:layout_height="wrap_content"
+	    android:layout_toRightOf="@id/im_at_text"
+	    android:layout_alignBaseline="@id/im_at_text"
+	    android:text="_venue_"
+	    />
+	<TextView
+	    android:layout_width="wrap_content"
+	    android:layout_height="wrap_content"
+	    android:id="@+id/watching_text"
+	    android:layout_below="@id/im_at_text"
+	    android:layout_alignLeft="@id/im_at_text"
+	    android:text="watching"
+	    />
+	<Spinner
+	    android:id="@+id/sport_spinner"
+	    android:layout_width="wrap_content"
+	    android:layout_height="wrap_content"
+	    android:layout_toRightOf="@id/watching_text"
+	    android:layout_alignBaseline="@id/watching_text" 
 	    />
 	<Button
 	    android:layout_width="wrap_content"
 	    android:layout_height="wrap_content"
 	    android:text="Check In"
-	    android:layout_below="@id/im_at_text" 
-	    android:layout_alignRight="@id/im_at_text"
+	    android:layout_below="@id/sport_spinner" 
+	    android:layout_alignRight="@id/sport_spinner"
 	    />
 	
 </RelativeLayout>

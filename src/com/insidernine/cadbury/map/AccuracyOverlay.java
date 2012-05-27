@@ -22,6 +22,7 @@ public class AccuracyOverlay extends ItemizedOverlay<AccuracyItem>
   public AccuracyOverlay(Drawable defaultMarker)
   {
     super(defaultMarker);
+    populate();
   }
 
   public void clear()

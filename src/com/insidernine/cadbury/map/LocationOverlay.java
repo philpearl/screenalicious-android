@@ -18,6 +18,7 @@ public class LocationOverlay extends ItemizedOverlay<OverlayItem>
   public LocationOverlay(Drawable defaultMarker)
   {
     super(boundCenter(defaultMarker));
+    populate();
   }
   
   public static Drawable boundCenter1(Drawable dr)

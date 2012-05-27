@@ -22,7 +22,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@drawable/dialog_body" 
-        android:padding="10dp">
+        android:padding="20dp">
 
         <TextView
             android:id="@+id/address"
@@ -49,6 +49,13 @@
             android:layout_alignParentRight="true"
             android:layout_below="@id/town"
             android:text="EN2 9AR" />
+        
+        <ImageView 
+            android:layout_width="150dp"
+            android:layout_height="150dp"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentTop="true"
+            android:src="@drawable/pub"/>
         
 		<FrameLayout
 		    android:id="@+id/checkin_button_frag"

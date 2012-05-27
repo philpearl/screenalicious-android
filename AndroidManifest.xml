@@ -18,6 +18,7 @@
             android:name=".LoadingActivity"
             android:label="@string/app_name" 
             android:theme="@android:style/Theme.Light.NoTitleBar"
+            android:screenOrientation="portrait"
             >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -29,16 +30,13 @@
         <activity
             android:name=".CadburyMapActivity"
             android:theme="@android:style/Theme.Light.NoTitleBar"
+            android:screenOrientation="portrait"
             />
         
         <activity
             android:name=".CheckInActivity" 
             android:theme="@style/dialogTheme"
-            />
-        
-        <activity 
-            android:name=".PickVenueActivity"
-            android:theme="@style/dialogTheme"
+            android:screenOrientation="portrait"
             />
     </application>
 

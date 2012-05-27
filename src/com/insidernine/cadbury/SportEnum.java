@@ -8,6 +8,7 @@ import android.graphics.drawable.Drawable;
 
 public enum SportEnum
 {
+  ALL("All", 0), // This conveniently syncs up the IDs
   ROAD_CYCLING("Road cycling", R.drawable.pin_road_cycling),
   BMX("BMX", R.drawable.pin_bmx),
   ATHLETICS("Athletics", R.drawable.pin_athletics),

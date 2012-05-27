@@ -15,7 +15,7 @@ public class SportVenueResponseHandler extends JSONResponseHandler<SportVenue[]>
     for (int i=0; i<venues.length; i++)
     {
       JSONObject jsonVenue = jsonVenues.getJSONObject(i); 
-      SportEnum sport = SportEnum.values()[jsonVenue.getInt("sport") -1];
+      SportEnum sport = SportEnum.values()[jsonVenue.getInt("sport")];
           
       Venue venue = new Venue(jsonVenue.getString("venue__foursq_id"), 
           jsonVenue.getString("venue__name"),

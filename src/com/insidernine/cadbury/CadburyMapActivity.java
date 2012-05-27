@@ -15,6 +15,8 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.Spinner;
@@ -47,6 +49,7 @@ public class CadburyMapActivity extends MapActivity implements LocationListener
   private AccuracyOverlay mAccuracyOverlay;
   private LocationOverlay mVenueOverlay;
   private SportVenueAsyncTask mSportVenueAsyncTask;
+  private SportVenue[] mSportVenues;
   
   private Location mLocation;
 
@@ -68,9 +71,24 @@ public class CadburyMapActivity extends MapActivity implements LocationListener
         R.layout.spinner_item,
         android.R.id.text1,
         SportEnum.values()));
+    
+    mSportSelector.setOnItemSelectedListener(new OnItemSelectedListener()
+    {
+      @Override
+      public void onItemSelected(AdapterView<?> arg0, View arg1, int arg2,
+          long arg3)
+      {
+        showSportVenues();
+      }
 
+      @Override
+      public void onNothingSelected(AdapterView<?> arg0)
+      {
+      }
+    });
 
-    mMapView.setBuiltInZoomControls(true);
+    // These get in the way
+    mMapView.setBuiltInZoomControls(false);
 
     mMapOverlays = mMapView.getOverlays();
     mPinDrawable = getResources().getDrawable(R.drawable.location_pin);
@@ -147,7 +165,7 @@ public class CadburyMapActivity extends MapActivity implements LocationListener
     MapController mapController = mMapView.getController();
 
     mapController.setCenter(point);
-    mapController.setZoom(18);
+    mapController.setZoom(19);
 
     mMapView.postInvalidate();
   }
@@ -186,7 +204,6 @@ public class CadburyMapActivity extends MapActivity implements LocationListener
   
   class SportVenueAsyncTask extends AsyncTask<Void, Void, Result<SportVenue[]>>
   {
-
     @Override
     protected Result<SportVenue[]> doInBackground(Void... params)
     {
@@ -213,21 +230,37 @@ public class CadburyMapActivity extends MapActivity implements LocationListener
       {
         Toast.makeText(getBaseContext(), "Failed to get checkin list: " + result.getException(), Toast.LENGTH_LONG).show();
       }
-      mVenueOverlay.clear();
-      
-      for (SportVenue sp: result.getData())
-      {
-        Venue venue = sp.getVenue();
-        GeoPoint point = geoPoint(venue.getLat(), venue.getLon());
-        OverlayItem item = new OverlayItem(point, "", "");
-        item.setMarker(sp.getSport().getPin(getBaseContext()));
-        Log.d(TAG, "Add item for " + sp.getSport() + " @" + venue);
-        Log.d(TAG, "Point is " + point);
-        mVenueOverlay.addItem(item);        
-      }
 
-      mMapView.postInvalidate();
+      mSportVenues = result.getData();
+      showSportVenues();
     }
     
+  }
+  
+  private void showSportVenues()
+  {
+    if (mSportVenues == null)
+    {
+      return;
+    }
+    SportEnum filter = (SportEnum) mSportSelector.getSelectedItem();    
+   
+    mVenueOverlay.clear();
+    for (SportVenue sp: mSportVenues)
+    {
+      if ((filter != SportEnum.ALL) && (filter != sp.getSport()))
+      {
+        continue;
+      }
+      Venue venue = sp.getVenue();
+      GeoPoint point = geoPoint(venue.getLat(), venue.getLon());
+      OverlayItem item = new OverlayItem(point, "", "");
+      item.setMarker(sp.getSport().getPin(getBaseContext()));
+      Log.d(TAG, "Add item for " + sp.getSport() + " @" + venue);
+      Log.d(TAG, "Point is " + point);
+      mVenueOverlay.addItem(item);        
+    }
+
+    mMapView.postInvalidate();
   }
 }

@@ -82,7 +82,7 @@ public class HttpLayer
     params.add(new BasicNameValuePair("lat", String.valueOf(venue.getLat())));
     params.add(new BasicNameValuePair("lon", String.valueOf(venue.getLon())));
     params.add(new BasicNameValuePair("person", id));
-    params.add(new BasicNameValuePair("sport", String.valueOf(sport.ordinal() + 1)));
+    params.add(new BasicNameValuePair("sport", String.valueOf(sport.ordinal())));
     
     String url = OUR_SERVER + "/checkin/checkin?" + URLEncodedUtils.format(params, "UTF-8");
     Log.d(TAG, "checkIn url: " + url);

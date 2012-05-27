@@ -63,8 +63,7 @@
         android:layout_height="wrap_content"
         android:layout_above="@id/sport_filter"
         android:layout_centerHorizontal="true"
-        android:layout_margin="20dp"
-        android:background="@drawable/check_in_button"
+        android:background="@drawable/map_checkin_button"
         />
 
 </RelativeLayout>

@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" >
+
+    <LinearLayout
+        android:id="@+id/share_options"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:gravity="center" >
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Share on"
+            android:paddingRight="5dp"
+            android:textAppearance="@style/dialogTextAppearance" />
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="5dp"
+            android:src="@drawable/social_twitter" />
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="5dp"
+            android:src="@drawable/social_facebook" />
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="5dp"
+            android:src="@drawable/social_google" />
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/enjoy_the_sport"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@id/share_options"
+        android:layout_centerHorizontal="true"
+        android:text="ENJOY THE TENNIS!"
+        android:textAppearance="@style/dialogLargeTextAppearance" />
+
+        <TextView
+        android:id="@+id/checked_in_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@id/enjoy_the_sport"
+        android:layout_centerHorizontal="true"
+        android:text="CHECKED IN"
+        android:textAppearance="@style/dialogLargeTextAppearance" />
+
+</RelativeLayout>

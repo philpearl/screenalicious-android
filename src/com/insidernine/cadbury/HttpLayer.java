@@ -35,7 +35,8 @@ public class HttpLayer
   private final AndroidHttpClient mHttpClient;
   
   private final VenueResponseHandler mVenueResponseHandler = new VenueResponseHandler();
-  private final SportsResponseHandler mSportsResponseHandler = new SportsResponseHandler();
+  private final CheckinsResponseHandler mCheckinsResponseHandler = new CheckinsResponseHandler();
+  private final SportVenueResponseHandler mSportVenueResponseHandler = new SportVenueResponseHandler();
   
   public HttpLayer(Context context)
   {
@@ -72,14 +73,7 @@ public class HttpLayer
     return mHttpClient.execute(get, mVenueResponseHandler);
   }
   
-  public Sport[] getSportsList() throws IOException
-  {
-    HttpGet get = new HttpGet(OUR_SERVER + "/checkin/get_sports");
-    
-    return mHttpClient.execute(get, mSportsResponseHandler);
-  }
-  
-  public void checkIn(Venue venue, Sport sport, String id) throws IOException
+  public void checkIn(Venue venue, SportEnum sport, String id) throws IOException
   {
     List<BasicNameValuePair> params = new ArrayList<BasicNameValuePair>(5);
     
@@ -88,7 +82,7 @@ public class HttpLayer
     params.add(new BasicNameValuePair("lat", String.valueOf(venue.getLat())));
     params.add(new BasicNameValuePair("lon", String.valueOf(venue.getLon())));
     params.add(new BasicNameValuePair("person", id));
-    params.add(new BasicNameValuePair("sport", String.valueOf(sport.getId())));
+    params.add(new BasicNameValuePair("sport", String.valueOf(sport.ordinal() + 1)));
     
     String url = OUR_SERVER + "/checkin/checkin?" + URLEncodedUtils.format(params, "UTF-8");
     Log.d(TAG, "checkIn url: " + url);
@@ -111,5 +105,19 @@ public class HttpLayer
     };
 
     mHttpClient.execute(get, handler);
+  }
+  
+  public Checkin[] getCurrentCheckins() throws IOException
+  {
+    HttpGet get = new HttpGet(OUR_SERVER + "/checkin/get_current_checkins");
+    
+    return mHttpClient.execute(get, mCheckinsResponseHandler);
+  }
+  
+  public SportVenue[] getSportVenues() throws IOException
+  {
+    HttpGet get = new HttpGet(OUR_SERVER + "/checkin/get_venues");
+    
+    return mHttpClient.execute(get, mSportVenueResponseHandler);
   }
 }

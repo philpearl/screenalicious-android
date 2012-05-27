@@ -19,6 +19,11 @@ public class LocationOverlay extends ItemizedOverlay<OverlayItem>
   {
     super(boundCenter(defaultMarker));
   }
+  
+  public static Drawable boundCenter1(Drawable dr)
+  {
+    return boundCenter(dr);
+  }
 
   public void addItem(OverlayItem overlay)
   {

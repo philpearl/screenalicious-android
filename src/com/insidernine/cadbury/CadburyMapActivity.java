@@ -1,5 +1,6 @@
 package com.insidernine.cadbury;
 
+import java.io.IOException;
 import java.util.List;
 
 
@@ -9,6 +10,7 @@ import android.graphics.drawable.Drawable;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -16,6 +18,7 @@ import android.view.View.OnClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.Spinner;
+import android.widget.Toast;
 
 import com.google.android.maps.GeoPoint;
 import com.google.android.maps.MapActivity;
@@ -42,6 +45,8 @@ public class CadburyMapActivity extends MapActivity implements LocationListener
   private Drawable mPinDrawable;
   private LocationOverlay mLocationOverlay;
   private AccuracyOverlay mAccuracyOverlay;
+  private LocationOverlay mVenueOverlay;
+  private SportVenueAsyncTask mSportVenueAsyncTask;
   
   private Location mLocation;
 
@@ -59,10 +64,11 @@ public class CadburyMapActivity extends MapActivity implements LocationListener
     mButton = (Button) findViewById(R.id.checkin);
     mSportSelector = (Spinner) findViewById(R.id.sport_filter);
     
-    mSportSelector.setAdapter(new ArrayAdapter<Sport>(this, 
+    mSportSelector.setAdapter(new ArrayAdapter<SportEnum>(this, 
         R.layout.spinner_item,
         android.R.id.text1,
-        ((CadburyApplication)getApplication()).getSports()));
+        SportEnum.values()));
+
 
     mMapView.setBuiltInZoomControls(true);
 
@@ -70,9 +76,11 @@ public class CadburyMapActivity extends MapActivity implements LocationListener
     mPinDrawable = getResources().getDrawable(R.drawable.location_pin);
     mLocationOverlay = new LocationOverlay(mPinDrawable);
     mAccuracyOverlay = new AccuracyOverlay(mPinDrawable);
+    mVenueOverlay = new LocationOverlay(mPinDrawable); // Won't ever use this pin!
 
+    mMapOverlays.add(mVenueOverlay);
     mMapOverlays.add(mAccuracyOverlay);
-    mMapOverlays.add(mLocationOverlay);
+    mMapOverlays.add(mLocationOverlay);    
 
     // Connect up the go button
     mButton.setOnClickListener(new OnClickListener()
@@ -85,6 +93,18 @@ public class CadburyMapActivity extends MapActivity implements LocationListener
       }
     });
   }
+  
+  @Override
+  protected void onDestroy()
+  {
+    if (mSportVenueAsyncTask != null)
+    {
+      mSportVenueAsyncTask.cancel(false);
+      mSportVenueAsyncTask = null;
+    }
+
+    super.onDestroy();
+  }
 
   @Override
   protected void onResume()
@@ -95,6 +115,13 @@ public class CadburyMapActivity extends MapActivity implements LocationListener
     {
       mLocationManager.requestLocationUpdates(provider, 60000, 10, this);
     }
+    
+    if (mSportVenueAsyncTask != null)
+    {
+      mSportVenueAsyncTask.cancel(false);
+    }
+    mSportVenueAsyncTask = new SportVenueAsyncTask();
+    mSportVenueAsyncTask.execute();
   }
 
   @Override
@@ -111,7 +138,7 @@ public class CadburyMapActivity extends MapActivity implements LocationListener
 
     mLocationOverlay.clear();
     mAccuracyOverlay.clear();
-
+    
     mLocationOverlay.addItem(new OverlayItem(point, "", ""));
     mAccuracyOverlay.addItem(new AccuracyItem(mMapView, point, location.getAccuracy()));
 
@@ -155,5 +182,52 @@ public class CadburyMapActivity extends MapActivity implements LocationListener
   @Override
   public void onStatusChanged(String provider, int status, Bundle extras)
   {
+  }
+  
+  class SportVenueAsyncTask extends AsyncTask<Void, Void, Result<SportVenue[]>>
+  {
+
+    @Override
+    protected Result<SportVenue[]> doInBackground(Void... params)
+    {
+      HttpLayer httpLayer = new HttpLayer(CadburyMapActivity.this);
+      try
+      {
+        return new Result<SportVenue[]>(httpLayer.getSportVenues());
+      }
+      catch (IOException e)
+      {
+        Log.e(TAG, "Failed to get list of sport venues");
+        return new Result<SportVenue[]>(e);
+      }
+      finally
+      {
+        httpLayer.onDestroy();
+      }
+    }
+    
+    @Override
+    protected void onPostExecute(Result<SportVenue[]> result)
+    {
+      if (result.isFailure())
+      {
+        Toast.makeText(getBaseContext(), "Failed to get checkin list: " + result.getException(), Toast.LENGTH_LONG).show();
+      }
+      mVenueOverlay.clear();
+      
+      for (SportVenue sp: result.getData())
+      {
+        Venue venue = sp.getVenue();
+        GeoPoint point = geoPoint(venue.getLat(), venue.getLon());
+        OverlayItem item = new OverlayItem(point, "", "");
+        item.setMarker(sp.getSport().getPin(getBaseContext()));
+        Log.d(TAG, "Add item for " + sp.getSport() + " @" + venue);
+        Log.d(TAG, "Point is " + point);
+        mVenueOverlay.addItem(item);        
+      }
+
+      mMapView.postInvalidate();
+    }
+    
   }
 }

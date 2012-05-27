@@ -60,7 +60,7 @@ public class Venue implements Parcelable
     dest.writeDouble(mLon);
   }
   
-  private Venue(Parcel in)
+  protected Venue(Parcel in)
   {
     mId = in.readString();
     mName = in.readString();

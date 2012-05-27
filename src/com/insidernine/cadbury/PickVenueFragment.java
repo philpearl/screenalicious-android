@@ -1,7 +1,6 @@
 package com.insidernine.cadbury;
 
 import android.content.Context;
-import android.content.Intent;
 import android.location.Location;
 import android.location.LocationManager;
 import android.os.Bundle;
@@ -24,6 +23,15 @@ public class PickVenueFragment extends ListFragment implements LoaderCallbacks<R
   private LocationManager mLocationManager;
   private VenueAdapter mAdapter;
   private Handler mHandler;
+  
+  public static PickVenueFragment newInstance(Location location)
+  {
+    Bundle args = new Bundle(1);
+    args.putParcelable("location", location);
+    PickVenueFragment frag = new PickVenueFragment();
+    frag.setArguments(args);
+    return frag;
+  }
   
   @Override
   public void onCreate(Bundle savedInstanceState)
@@ -75,9 +83,10 @@ public class PickVenueFragment extends ListFragment implements LoaderCallbacks<R
   {
     Venue venue = mAdapter.getItem(position);
     Log.d(TAG, "Picked venue " + venue);
-    //((VenueCallback)getTargetFragment()).onVenuePicked(venue);
-    getActivity().setResult(getTargetRequestCode(), new Intent().putExtra(PickVenueActivity.EXTRA_VENUE, venue));
-    getActivity().finish();
+    CheckinFragment frag = CheckinFragment.newInstance(venue);
+    getFragmentManager().beginTransaction()
+    .replace(getId(), frag)
+    .commit();
   }
 
   @Override
@@ -110,10 +119,5 @@ public class PickVenueFragment extends ListFragment implements LoaderCallbacks<R
   {
     mAdapter.clear();
     mAdapter.notifyDataSetChanged();
-  }
-  
-  public interface VenueCallback
-  {
-    public void onVenuePicked(Venue venue);
-  }
+  }  
 }

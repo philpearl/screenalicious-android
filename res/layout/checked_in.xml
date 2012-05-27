@@ -43,7 +43,8 @@
         android:layout_height="wrap_content"
         android:layout_above="@id/share_options"
         android:layout_centerHorizontal="true"
-        android:text="ENJOY THE TENNIS!"
+        android:gravity="center"
+        android:text="ENJOY THE LAWN ROYAL TENNIS!"
         android:textAppearance="@style/dialogLargeTextAppearance" />
 
         <TextView

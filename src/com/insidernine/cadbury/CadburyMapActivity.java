@@ -94,9 +94,9 @@ public class CadburyMapActivity extends MapActivity implements LocationListener
 
     mMapOverlays = mMapView.getOverlays();
     mPinDrawable = getResources().getDrawable(R.drawable.location_pin);
-    mLocationOverlay = new LocationOverlay(mPinDrawable);
+    mLocationOverlay = new LocationOverlay(this, mPinDrawable);
     mAccuracyOverlay = new AccuracyOverlay(mPinDrawable);
-    mVenueOverlay = new LocationOverlay(mPinDrawable); // Won't ever use this pin!
+    mVenueOverlay = new LocationOverlay(this, mPinDrawable); // Won't ever use this pin!
 
     mMapOverlays.add(mVenueOverlay);
     mMapOverlays.add(mAccuracyOverlay);
@@ -256,7 +256,7 @@ public class CadburyMapActivity extends MapActivity implements LocationListener
       }
       Venue venue = sp.getVenue();
       GeoPoint point = geoPoint(venue.getLat(), venue.getLon());
-      OverlayItem item = new OverlayItem(point, "", "");
+      OverlayItem item = new OverlayItem(point, venue.getName(), venue.getName());
       item.setMarker(sp.getSport().getPin(getBaseContext()));
       Log.d(TAG, "Add item for " + sp.getSport() + " @" + venue);
       Log.d(TAG, "Point is " + point);

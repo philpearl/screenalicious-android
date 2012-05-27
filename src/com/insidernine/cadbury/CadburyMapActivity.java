@@ -67,10 +67,12 @@ public class CadburyMapActivity extends MapActivity implements LocationListener
     mButton = (Button) findViewById(R.id.checkin);
     mSportSelector = (Spinner) findViewById(R.id.sport_filter);
     
-    mSportSelector.setAdapter(new ArrayAdapter<SportEnum>(this, 
+    ArrayAdapter<SportEnum> adapter = new ArrayAdapter<SportEnum>(this, 
         R.layout.spinner_item,
         android.R.id.text1,
-        SportEnum.values()));
+        SportEnum.values()); 
+    mSportSelector.setAdapter(adapter);
+    adapter.setDropDownViewResource(R.layout.spinner_item_light);
     
     mSportSelector.setOnItemSelectedListener(new OnItemSelectedListener()
     {

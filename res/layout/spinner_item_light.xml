@@ -6,8 +6,8 @@
     
 	<TextView
 	    android:id="@android:id/text1"
-	    android:background="@null"
-	    android:textAppearance="@style/dialogTitleTextAppearance"
+	    android:background="@android:color/white"
+	    android:textAppearance="@style/dialogTextAppearance"
 	    android:layout_width="match_parent"
 	    android:layout_height="match_parent"	    
 	    android:minHeight="48dp" 

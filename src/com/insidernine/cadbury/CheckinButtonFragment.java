@@ -1,6 +1,9 @@
 package com.insidernine.cadbury;
 
 import java.io.IOException;
+import java.io.UTFDataFormatException;
+import java.lang.reflect.Array;
+import java.util.ArrayList;
 
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -60,13 +63,14 @@ public class CheckinButtonFragment extends Fragment
       }
     });
     mSportSpinner = (Spinner) view.findViewById(R.id.sport_spinner);
-    mSportSpinner.setAdapter(new ArrayAdapter<SportEnum>(getActivity(), 
-        android.R.layout.simple_spinner_item, 
+        
+    mSportSpinner.setAdapter(new SportSpinnerAdapter(getActivity(), 
+        R.layout.spinner_item_light,
+        android.R.id.text1,
         SportEnum.values()));
 
     mSportSpinner.setOnItemSelectedListener(new OnItemSelectedListener()
     {
-
       @Override
       public void onItemSelected(AdapterView<?> parent, View view, int position, long id)
       {
@@ -79,7 +83,8 @@ public class CheckinButtonFragment extends Fragment
       {
       }
     });
-    mSportSpinner.getSelectedItem();
+    
+    checkEnableCheckin();
   }
   
   @Override
@@ -95,7 +100,7 @@ public class CheckinButtonFragment extends Fragment
 
   private void checkEnableCheckin()
   {
-    mCheckInButton.setEnabled((mSport != null) && (mVenue != null));
+    mCheckInButton.setEnabled((mSport != null) && (mSport != SportEnum.ALL) && (mVenue != null));
   }
     
   class CheckInAsyncTask extends AsyncTask<Void, Void, Exception>
@@ -105,7 +110,7 @@ public class CheckinButtonFragment extends Fragment
     @Override
     protected void onPreExecute()
     {
-      // TODO Show progress dialog
+      // Show progress dialog.  Doesn't show!
       mProgressDialogFragment = ProgressDialogFragment.newInstance("Checking in", "One moment please.");
       mProgressDialogFragment.show(getFragmentManager(), "Progress Dialog");
     }

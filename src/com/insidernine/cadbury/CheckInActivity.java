@@ -14,8 +14,10 @@ public class CheckInActivity extends FragmentActivity
     if (savedInstanceState == null)
     {
       // Starting from scratch
+      PickVenueFragment frag = PickVenueFragment.newInstance((Location) getIntent().getParcelableExtra(CadburyMapActivity.EXTRA_LOCATION));
       getSupportFragmentManager().beginTransaction()
-      .add(android.R.id.content, PickVenueFragment.newInstance((Location) getIntent().getParcelableExtra(CadburyMapActivity.EXTRA_LOCATION)))
+      .add(android.R.id.content, frag)
+      .hide(frag)
       .commit();
     }        
   }

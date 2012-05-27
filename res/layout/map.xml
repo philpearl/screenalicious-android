@@ -36,7 +36,17 @@
         android:layout_centerHorizontal="true"
         android:textAppearance="@style/dialogTextAppearance"
         android:padding="@dimen/standard_spacing"
-        android:background="@color/primary" />
+        android:background="@drawable/bottom_bar" />
+    
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@id/sport_filter"
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="50dp"
+        android:paddingBottom="50dp"
+        android:src="@drawable/drop_down_arrow_white" 
+        />
 
     <com.google.android.maps.MapView
         android:id="@+id/mapview"

@@ -23,6 +23,7 @@ public class PickVenueFragment extends ListFragment implements LoaderCallbacks<R
   private LocationManager mLocationManager;
   private VenueAdapter mAdapter;
   private Handler mHandler;
+  private ProgressDialogFragment mProgressDialogFragment;
   
   public static PickVenueFragment newInstance(Location location)
   {
@@ -65,6 +66,12 @@ public class PickVenueFragment extends ListFragment implements LoaderCallbacks<R
     // offer a refresh
     setListAdapter(mAdapter);
     
+    mProgressDialogFragment = ProgressDialogFragment.newInstance("hello", "loading venues");
+    getFragmentManager()
+    .beginTransaction()
+    .add(android.R.id.content, mProgressDialogFragment)
+    .commit();
+    
     mLocation = LocationUtils.getBestLastKnownLocation(mLocationManager);
     Bundle args = new Bundle(1);
     args.putParcelable("location", mLocation);
@@ -100,7 +107,15 @@ public class PickVenueFragment extends ListFragment implements LoaderCallbacks<R
   public void onLoadFinished(Loader<Result<Venue[]>> loader, Result<Venue[]> result)
   {
     Log.d(TAG, "onLoadFinished");
-    
+   
+    if (mProgressDialogFragment != null)
+    {
+      getFragmentManager().beginTransaction()
+      .remove(mProgressDialogFragment)
+      .commitAllowingStateLoss();
+      mProgressDialogFragment = null;
+    }
+
     if (result.isFailure())
     {
       Toast.makeText(getActivity(), "Failed to get venues: " + result.getException(), Toast.LENGTH_LONG).show();
@@ -108,6 +123,12 @@ public class PickVenueFragment extends ListFragment implements LoaderCallbacks<R
       mHandler.post(mQuitRunnable);
       return;
     }
+
+    getFragmentManager().beginTransaction()
+    .show(this)
+    .commitAllowingStateLoss();
+    mProgressDialogFragment = null;
+
     
     mAdapter.clear();
     mAdapter.addAll(result.getData());
